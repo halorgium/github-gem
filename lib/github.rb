@@ -27,8 +27,8 @@ module GitHub
   end
 
   def invoke(command, *args)
-    if block = commands[command]
-      block.call(*args)
+    if klass = commands[command]
+      klass.call(*args)
     else
       debug "Couldn't invoke `#{command}`: not found"
     end
@@ -36,7 +36,9 @@ module GitHub
 
   def register(command, &block)
     debug "Registered `#{command}`"
-    commands[command.to_s] = Command.new(block)
+    klass = Class.new(Command)
+    klass.class_eval(&block)
+    commands[command.to_s] = klass
   end
 
   def helper(command, &block)
