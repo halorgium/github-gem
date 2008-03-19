@@ -36,7 +36,6 @@ module GitHub
 
   def activate(args)
     @debug = args.delete('--debug')
-    load 'helpers.rb'
     load 'commands.rb'
     invoke(args.shift, *args)
   end
